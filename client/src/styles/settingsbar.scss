@@ -9,4 +9,9 @@
     position: absolute;
     box-shadow: 0 3px 5px #ccc;
     top: $toolbar-height;
+    padding: 0 15px;
+
+    &__lineWidth {
+        margin: 0 10px;
+    }
 }
