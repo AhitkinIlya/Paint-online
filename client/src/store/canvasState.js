@@ -7,9 +7,23 @@ class CanvasState {
     canvas = null
     backList = []
     forwardList = []
+    socket = null
+    sessionId = null
 
     setCanvas(canvas) {
         this.canvas = canvas
+    }
+    
+    setUserName(userName) {
+        this.userName = userName
+    }
+
+    setSessionId(id) {
+        this.sessionId = id
+    }
+
+    setSocket(socket) {
+        this.socket = socket
     }
 
     pushToBack(data) {

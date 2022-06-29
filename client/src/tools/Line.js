@@ -12,7 +12,7 @@ export default class Line extends Tool {
         this.canvas.onmousedown = this.mouseDownHandler.bind(this)
     }
 
-    mouseUpHandler(e) {
+    mouseUpHandler() {
         this.mouseDown = false
     }
 
