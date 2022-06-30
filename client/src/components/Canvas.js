@@ -2,11 +2,13 @@ import React, { useRef, useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Modal, Button } from 'react-bootstrap'
 import { useParams  } from 'react-router-dom'
+import axios from 'axios'
 
 import '../styles/canvas.scss'
 import canvasState from '../store/canvasState'
 import toolState from '../store/toolState'
 import Brush from '../tools/Brush'
+import Rect from '../tools/Rect'
 
 const Canvas = observer(() => {
     const canvasRef = useRef()
@@ -16,6 +18,16 @@ const Canvas = observer(() => {
 
     useEffect(() => {
         canvasState.setCanvas(canvasRef.current)
+        let ctx = canvasRef.current.getContext('2d')
+        axios.get(`http://localhost:5000/image?id=${params.id}`)
+            .then(res => {
+                const image = new Image()
+                image.src = res.data
+                image.onload = () => {
+                    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
+                    ctx.drawImage(image, 0, 0, canvasRef.current.width, canvasRef.current.height)
+                }
+            })
     }, [])
 
     useEffect(() => {
@@ -55,11 +67,16 @@ const Canvas = observer(() => {
             case 'finish':
                 ctx.beginPath()
                 break
+            case 'rect':
+                Rect.staticDraw(ctx, figure.x, figure.y, figure.width, figure.height, figure.color)
+                break
         }
     }
 
     const mouseDown = () => {
         canvasState.pushToBack(canvasRef.current.toDataURL())
+        axios.post(`http://localhost:5000/image?id=${params.id}`, {img: canvasRef.current.toDataURL()})
+            .then(res => console.log('res', res.data))
     }
 
     const connectionHandler = () => {
